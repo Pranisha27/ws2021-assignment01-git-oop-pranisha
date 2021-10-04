@@ -1,0 +1,87 @@
+@startuml order_management_system
+skinparam linetype ortho
+class Address {
+    - String country
+    - String city
+    - int postalcode
+    - String street
+    - int number
+    + get_country()
+    + get_city()
+    + get_postalcode()
+    + get_street()
+    + get_number()
+    + get_full_address()
+}
+class ContactDetails {
+    - String first_name
+    - String last_name
+    - String email
+    - String phone_number
+    + get_first_name()
+    + get_last_name()
+    + get_email()
+    + get_phone_number()
+}
+class Customer {
+    + get_contact_details()
+    + get_address()
+    + get_orders()
+}
+enum State {
+    pending
+    accepted
+    rejected
+    processing
+    shipped
+    closed
+}
+class Order {
+    - Date date
+    + cancel()
+    + process()
+    + dispatch()
+    + calculate_total()
+    + claculate_total_weight()
+}
+class OrderDetail {
+    - int quantity
+    + calculate_subtotal()
+    + calculate_weight()
+}
+class Item {
+    - float price
+    - float weight
+    - String description
+    + get_price_for_quantity()
+    + in_stock()
+}
+abstract class Payment {
+    - float amount
+}
+class Cash extends Payment {
+    - float cash_tendered
+    + tender_cash()
+    + return_change()
+}
+class BankTransfere extends Payment {
+    - String recipient_name
+    - String IBAN
+    - String BIC
+    + authorized()
+}
+class CreditCard extends Payment {
+    - String number
+    - String type
+    - String cardholer_name
+    - Date expiration_date
+    + authorized()
+}
+Order "0..*" -- "1" Customer
+Order "1" *-- "0..*" OrderDetail
+Order "1" --> "1" State
+OrderDetail "0..*" --> "1" Item
+Customer "1" *-- "1" ContactDetails
+Customer "1" *-- "1" Address
+Customer "1" -- "1..*" Payment
+@enduml
